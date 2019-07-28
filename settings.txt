@@ -1,0 +1,11 @@
+# WINDOW_TYPE: The type of window borders the program will be checking for.
+# Supported types: WINDOWED-1360
+WINDOW_TYPE=WINDOWED-1360
+# TIMEOUT: How long the program will wait during a Pause for a response (10 = 1s)
+TIMEOUT=30
+# BOT_PREFIX: Chars before the command name the bot will respond to
+BOT_PREFIX=??
+# BOT_OWNER: Discord User ID for the owner the bot will only respond to
+BOT_OWNER=0
+# GETTING_FAR: What % the bot will Server Deafen you at
+GETTING_FAR=50
