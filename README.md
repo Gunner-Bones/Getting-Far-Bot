@@ -39,6 +39,7 @@ There are also additional setting configurations in `settings.txt`:
 - `TIMEOUT`: How long the program will wait during a Pause for a response (10 = 1s)
 - `BOT_PREFIX`: Chars before the command name the bot will respond to
 - `FAR_CHANNEL`: (Optional) Discord Channel ID to announce deaths past GETTING_FAR. (Bot will handle this)
+- `LIST_RQ`: (Optional) (1=On,0=Off) When playing a List Demon, change the GETTING_FAR percentage to its Requirement %. 
 
 ## Usage
 
@@ -54,6 +55,9 @@ To turn off the Bot, simply close the script's window.
 ### Commands
 
 - `join_call`: Joins the Voice Channel you are currently in. You must be in a Voice Channel to use this command.
+- `change_far (integer)`: Changes the GETTING_FAR %.
 - `far_channel`: Toggles the channel this command was typed in as a **Far Channel**. The Bot will send messages
 to the channel when the user is getting far, has died past the far percentage, or has completed the level.
 ![Example](https://cdn.discordapp.com/attachments/471765577011036172/747288541654155304/unknown.png)
+- `toggle_list`: When playing an Insane/Extreme Demon on the Pointercrate List, toggles whether the bot will
+automatically update your GETTING_FAR % to the associated list demon's Requirement %.
