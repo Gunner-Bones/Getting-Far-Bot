@@ -106,7 +106,6 @@ def datasettings(file,method,line="",newvalue="",newkey=""):
 	s.write(slt); s.close(); return None
 
 
-Client = discord.Client()
 bot_prefix = datasettings(file="settings.txt",method="get",line="BOT_PREFIX")
 client = commands.Bot(command_prefix=bot_prefix)
 client.remove_command("help")
