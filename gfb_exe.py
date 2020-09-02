@@ -3,6 +3,8 @@ import time
 import sys
 import os
 import discord
+import nacl
+import libnacl
 import asyncio
 import random
 import json
@@ -106,28 +108,46 @@ def datasettings(file,method,line="",newvalue="",newkey=""):
 	s.write(slt); s.close(); return None
 
 
+print("="*30)
+print("GETTING FAR BOT v2")
+print("By GunnerBones")
+print("="*30)
+print("-"*30)
+BOT_PREFIX = "??"
+print("[Input] BOT_PREFIX=" + BOT_PREFIX)
+print("[Input] (Optional) Enter symbol prefix for your Discord Bot (Enter to use default).")
+temp = input("BOT_PREFIX:")
+if temp != "":
+	BOT_PREFIX = temp
+	print("[Input] BOT_PREFIX=" + BOT_PREFIX)
+print("-"*30)
+print("[Input] Enter your Discord Bot's SECRET (Refer to the README if you're unsure what that is).")
+temp = input("BOT_SECRET:")
+BOT_SECRET = temp
+print("\n."*40)
+print("[Input] BOT_SECRET entered and hidden.")
+print("Running bot...")
+
+
 Client = discord.Client()
-bot_prefix = datasettings(file="settings.txt",method="get",line="BOT_PREFIX")
-client = commands.Bot(command_prefix=bot_prefix)
+client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command("help")
 
-BOT_SECRET = datasettings(file="secret.txt",method="get",line="BOT_SECRET")
-if BOT_SECRET == "lol" or not BOT_SECRET:
-	print("[Error] BOT_SECRET in secret.txt needs to be set to bot's secret")
-	print("Shutting down...")
-	time.sleep(5)
-	sys.exit()
+
 BOT_OWNER = None
-TIMEOUT = int(datasettings(file="settings.txt",method="get",line="TIMEOUT"))
-GETTING_FAR = int(datasettings(file="settings.txt",method="get",line="GETTING_FAR"))
-FAR_CHANNEL = strtolist(datasettings(file="settings.txt",method="get",line="FAR_CHANNEL"))
-LIST_RQ = int(datasettings(file="settings.txt",method="get",line="LIST_RQ"))
+TIMEOUT = 30
+GETTING_FAR = 30
+FAR_CHANNEL = []
+LIST_RQ = 0
+WHITELIST = []
 
 
 DEAFEN = False
 VOICE_SESSION = None
 SCANNING = False
 LIST_RF = []
+WHITEON = False
+CURRENT_LEVEL = 0
 
 
 def requestPCDemonRequirement(level_name):
@@ -224,6 +244,7 @@ async def join_call(ctx):
 				SCANNING = True
 				await response_message(ctx,"Joined Voice Channel `" + ctx.author.voice.channel.name +
 									   "`. Bot is now monitoring your screen.","success")
+				print("[Getting Far] Joined voice channel '" + ctx.author.voice.channel.name + "'")
 			else:
 				await response_message(ctx,"You are not in a Voice Channel!","failed")
 		else:
@@ -270,6 +291,51 @@ async def toggle_list(ctx):
 
 
 @client.command(pass_context=True)
+async def toggle_whitelist(ctx):
+	global WHITEON
+	if bot_permissions(ctx):
+		if bot_owner(ctx):
+			if not WHITEON:
+				await response_message(ctx, "Whitelist turned `ON`.", "success")
+				WHITEON = True
+				print("[Getting Far] USE WHITELIST turned ON")
+
+			else:
+				await response_message(ctx, "Whitelist turned `OFF`.", "success")
+				WHITEON = False
+				print("[Getting Far] USE WHITELIST turned OFF")
+		else:
+			await response_message(ctx,"","failed","author_not_owner")
+	else:
+		await response_message(ctx,"","failed","bot_lacks_perms")
+
+
+@client.command(pass_context=True)
+async def whitelist_level(ctx):
+	global WHITEON
+	global WHITELIST
+	global CURRENT_LEVEL
+	if bot_permissions(ctx):
+		if bot_owner(ctx):
+			if CURRENT_LEVEL:
+				if CURRENT_LEVEL not in WHITELIST:
+					WHITELIST.append(CURRENT_LEVEL)
+					await response_message(ctx, "`" + str(CURRENT_LEVEL) + "` added to WHITELIST.", "success")
+					print("[Getting Far] " + str(CURRENT_LEVEL) + " added to WHITELIST")
+				else:
+					WHITELIST.remove(CURRENT_LEVEL)
+					await response_message(ctx, "`" + str(CURRENT_LEVEL) + "` removed from WHITELIST.", "success")
+					print("[Getting Far] " + str(CURRENT_LEVEL) + " removed from WHITELIST")
+				datasettings(file="settings.txt", method="change", line="WHITELIST", newvalue=str(WHITELIST))
+			else:
+				await response_message(ctx, "You're not currently playing a level!", "failed")
+		else:
+			await response_message(ctx,"","failed","author_not_owner")
+	else:
+		await response_message(ctx,"","failed","bot_lacks_perms")
+
+
+@client.command(pass_context=True)
 async def change_far(ctx, num):
 	global GETTING_FAR
 	if bot_permissions(ctx):
@@ -291,6 +357,25 @@ async def change_far(ctx, num):
 		await response_message(ctx,"","failed","bot_lacks_perms")
 
 
+"""@client.command(pass_context=True)
+async def change_prefix(ctx, st):
+	global BOT_PREFIX
+	if bot_permissions(ctx):
+		if bot_owner(ctx):
+			if st.replace(" ","") != "":
+				BOT_PREFIX = st
+				await response_message(ctx, "BOT_PREFIX changed to `" + str(st) + "`.", "success")
+				print("[Getting Far] BOT_PREFIX=" + str(st))
+			else:
+				await response_message(ctx, "Prefix cannot be blank!", "failed")
+		else:
+			await response_message(ctx,"","failed","author_not_owner")
+	else:
+		await response_message(ctx,"","failed","bot_lacks_perms") """
+
+# This probably does not work post bot startup
+
+
 @client.event
 async def on_voice_state_update(member,before,after):
 	global SCANNING
@@ -298,6 +383,7 @@ async def on_voice_state_update(member,before,after):
 	if member.id == BOT_OWNER and not after.channel:
 		SCANNING = False
 		await VOICE_SESSION.disconnect()
+		print("[Getting Far] Left voice channel.")
 		VOICE_SESSION = None
 
 
@@ -308,6 +394,10 @@ async def main():
 	global BOT_OWNER
 	global LIST_RQ
 	global GETTING_FAR
+	global WHITELIST
+	global WHITEON
+	global CURRENT_LEVEL
+	# can't have this many globals with a global pandemic going on haha
 	level_name = "None"
 	level_creator = "None"
 	level_best = 0
@@ -316,15 +406,20 @@ async def main():
 	try:
 		memory = gd.memory.get_memory()
 	except RuntimeError:
-		sys.exit("[Error] Geometry Dash needs to be open!")
+		print("[ERROR] Geometry Dash needs to be open! Exiting in 5s.")
+		time.sleep(5)
+		sys.exit("Geometry Dash needs to be running.")
 	try:
 		if memory.is_in_level():
 			level_name = memory.get_level_name()
 			level_creator = memory.get_level_creator()
 			level_best = memory.get_normal_percent()
+			CURRENT_LEVEL = memory.get_level_id_fast()
 			await client.change_presence(activity=discord.Game(name=BOT_OWNER.name + " has " + str(level_best)
 				 + "% on " + level_name + " by " + level_creator))
 			print("[Getting Far] Level data generated: " + level_name + " by " + level_creator)
+		else:
+			CURRENT_LEVEL = 0
 	except AttributeError:
 		pass
 	alive = True
@@ -335,6 +430,10 @@ async def main():
 			level_name = memory.get_level_name()
 			level_creator = memory.get_level_creator()
 			level_best = memory.get_normal_percent()
+			CURRENT_LEVEL = memory.get_level_id_fast()
+			if WHITEON and WHITELIST and CURRENT_LEVEL not in WHITELIST:
+				await asyncio.sleep(0.5)
+				continue
 			if LIST_RQ and not changed_rq:
 				if memory.get_level_stars() == 10 and memory.get_level_demon_difficulty_value() >= 5:
 					new_requirement = requestPCDemonRequirement(level_name)
@@ -370,8 +469,14 @@ async def main():
 		elif not memory.is_in_level():
 			victory = False
 			changed_rq = False
+			CURRENT_LEVEL = 0
 		await asyncio.sleep(0.5)
 
 
 client.loop.create_task(main())
-client.run(BOT_SECRET)
+try:
+	client.run(BOT_SECRET)
+except discord.errors.LoginFailure:
+	print("[ERROR] Invalid BOT_SECRET! Exiting in 5s.")
+	time.sleep(5)
+	sys.exit()
