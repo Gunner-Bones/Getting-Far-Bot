@@ -25,8 +25,6 @@ python -m pip install --upgrade https://github.com/NeKitDS/gd.py/archive/master.
 You need to create a **Discord Bot** to have something to deafen you when you get far in a Geometry Dash level.
 My video on [Getting Far Bot 1.0](https://www.youtube.com/watch?v=dlWmOtQ80PM) includes a visual guide on creating a Discord Bot, or
 [this doc](https://discordpy.readthedocs.io/en/latest/discord.html) also works. 
-NOTE! As of Discord API v1.5, all bots require enabling Priviledged Intents in order for basic functionality. Make sure to enable
-it in your bot's application page by going to Bot > Priviledged Intents and enabling it *or the bot will not work*.
 These show how to create a Bot and get its essential **Bot Secret**.
 Once you have the Bot Secret, open `secret.txt` and add it next to `BOT_SECRET=`. The file should look like this:
 ```
@@ -35,6 +33,8 @@ BOT_SECRET=wefwrgrwgrggr...
 In addition, the Bot will only respond to commands if:
 1) The Discord account who created the Bot made the command
 2) The Bot has a role with the `Administrator` permission
+NOTE! As of Discord API v1.5, all bots require enabling Priviledged Intents in order for basic functionality. Make sure to enable
+it in your bot's application page by going to Bot > Priviledged Intents and enabling it *or the bot will not work*.
 
 There are also additional setting configurations in `settings.txt`:
 - `GETTING_FAR`: What % the bot will Server Deafen you at
