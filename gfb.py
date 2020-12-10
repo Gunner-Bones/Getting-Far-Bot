@@ -106,9 +106,11 @@ def datasettings(file,method,line="",newvalue="",newkey=""):
 	s.write(slt); s.close(); return None
 
 
-Client = discord.Client()
+intents = discord.Intents.default()
+intents.members = True
+Client = discord.Client(intents=intents)
 bot_prefix = datasettings(file="settings.txt",method="get",line="BOT_PREFIX")
-client = commands.Bot(command_prefix=bot_prefix)
+client = commands.Bot(command_prefix=bot_prefix, intents=intents)
 client.remove_command("help")
 
 BOT_SECRET = datasettings(file="secret.txt",method="get",line="BOT_SECRET")
@@ -194,6 +196,11 @@ def bot_permissions(ctx):
 
 def bot_owner(ctx):
 	return ctx.author.id == BOT_OWNER.id
+
+def find_member(guild, uid):
+	for member in guild.members:
+		if member.id == uid:
+			return member
 
 
 @client.event
@@ -408,7 +415,7 @@ async def main():
 						"' with Requirement " + str(new_requirement) + "%")
 			if not DEAFEN and memory.get_percent() >= GETTING_FAR and not memory.is_dead():
 				DEAFEN = True
-				await VOICE_SESSION.guild.get_member(BOT_OWNER.id).edit(deafen=True)
+				await find_member(VOICE_SESSION.guild, BOT_OWNER.id).edit(deafen=True)
 				await client.change_presence(activity=discord.Game(name=BOT_OWNER.name + " is GETTING FAR!"))
 				await sendout_message(message_type="far", level_name=level_name, level_creator=level_creator)
 				print("[Getting Far] User is GETTING FAR!")
