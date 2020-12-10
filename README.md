@@ -33,6 +33,7 @@ BOT_SECRET=wefwrgrwgrggr...
 In addition, the Bot will only respond to commands if:
 1) The Discord account who created the Bot made the command
 2) The Bot has a role with the `Administrator` permission
+
 NOTE! As of Discord API v1.5, all bots require enabling Priviledged Intents in order for basic functionality. Make sure to enable
 it in your bot's application page by going to Bot > Priviledged Intents and enabling it *or the bot will not work*.
 
