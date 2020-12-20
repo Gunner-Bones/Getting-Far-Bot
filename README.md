@@ -12,7 +12,7 @@ You will also need to install additional modules for the script:
 - `gd` is the main Python wrapper for Geometry Dash interaction.
 To install a module, in a **Command Prompt** type:
 ```
-python -m install module_name
+python -m pip install module_name
 ```
 The exception to this is the `gd` module, which is installed in a
 slightly different way to get the latest updated version:
