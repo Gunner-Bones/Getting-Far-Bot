@@ -4,7 +4,7 @@ A Geometry Dash tool used on Discord for having a Bot deafen the user when they 
 
 ## Installation
 
-This requires installing Python 3.7 or higher.
+This requires installing Python 3.7 or higher. You can download Python [Here](https://www.python.org/downloads/).
 You will also need to install additional modules for the script:
 - `discord` is needed to run a Discord Bot.
 - `pynacl` is a dependency for the `discord` module and used for voice.
