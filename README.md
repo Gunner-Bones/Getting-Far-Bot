@@ -13,7 +13,7 @@ You will also need to install additional modules for the script:
 To install a module, in a **Command Prompt** type:
 (With the module being the one of these above of course, you need to install all of them.)
 ```
-pip install module_name_here
+python -m pip install module_name
 ```
 The exception to this is the `gd` module, which is installed in a
 slightly different way to get the latest updated version:
