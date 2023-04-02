@@ -1,23 +1,24 @@
-# Getting-Far-Bot
+# Getting Far Bot
 
 A Geometry Dash tool used on Discord for having a Bot deafen the user when they 'get far' on a level at a specified percentage. 
 
 ## Installation
 
-This requires installing Python 3.7 or higher.
+This requires installing Python 3.7 or higher. You can download Python [Here](https://www.python.org/downloads/).
 You will also need to install additional modules for the script:
 - `discord` is needed to run a Discord Bot.
 - `pynacl` is a dependency for the `discord` module and used for voice.
 - `asyncio` provides asyncronous task-related commands.
-- `gd` is the main Python wrapper for Geometry Dash interaction.
+- `gd.py` is the main Python wrapper for Geometry Dash interaction.
 To install a module, in a **Command Prompt** type:
+(With the module being the one of these above of course, you need to install all of them.)
 ```
 python -m pip install module_name
 ```
 The exception to this is the `gd` module, which is installed in a
 slightly different way to get the latest updated version:
 ```
-python -m pip install --upgrade https://github.com/NeKitDS/gd.py/archive/master.zip
+python pip install --upgrade https://github.com/NeKitDS/gd.py/archive/master.zip
 ```
 
 ## Setup
@@ -25,8 +26,8 @@ python -m pip install --upgrade https://github.com/NeKitDS/gd.py/archive/master.
 You need to create a **Discord Bot** to have something to deafen you when you get far in a Geometry Dash level.
 My video on [Getting Far Bot 1.0](https://www.youtube.com/watch?v=dlWmOtQ80PM) includes a visual guide on creating a Discord Bot, or
 [this doc](https://discordpy.readthedocs.io/en/latest/discord.html) also works. 
-These show how to create a Bot and get its essential **Bot Secret**.
-Once you have the Bot Secret, open `secret.txt` and add it next to `BOT_SECRET=`. The file should look like this:
+These show how to create a Bot and get its essential **Secret/Token**.
+Once you have the Bot Secret (Token), open `secret.txt` and add it next to `BOT_SECRET=`. The file should look like this:
 ```
 BOT_SECRET=wefwrgrwgrggr...
 ```
@@ -49,11 +50,11 @@ There are also additional setting configurations in `settings.txt`:
 Once you have installed Python with its required modules, and set up a Discord Bot and linked it to `secret.txt`,
 to run the program:
 1) Open Geometry Dash
-2) Run the script with:
+2) Run the script with (or debug if you have a proper IDE):
 ```
 python main.py
 ```
-To turn off the Bot, simply close the script's window.
+To turn off the Bot, simply close the script/Command Prompt's window.
 
 ### Commands
 
