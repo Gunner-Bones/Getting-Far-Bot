@@ -18,7 +18,7 @@ python -m pip install module_name
 The exception to this is the `gd` module, which is installed in a
 slightly different way to get the latest updated version:
 ```
-python pip install --upgrade https://github.com/NeKitDS/gd.py/archive/master.zip
+python -m pip install --upgrade https://github.com/NeKitDS/gd.py/archive/master.zip
 ```
 
 ## Setup
